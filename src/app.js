@@ -1,17 +1,35 @@
+require('dotenv').config() 
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const treblle = require('@treblle/express') 
+
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+
+
+console.log( process.env.TREBLLE_API_KEY )
+console.log( process.env.TREBLLE_PROJECT_ID)
+
+
+// Trebble 
+const trebbleConfig = {
+         apiKey: process.env.TREBLLE_API_KEY,
+         projectId: process.env.TREBLLE_PROJECT_ID,
+         additionalFieldsToMask: [],
+              }
+
+
+app.use( treblle(trebbleConfig) ) 
+
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -26,6 +44,7 @@ app.use('/users', usersRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {
