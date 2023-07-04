@@ -14,17 +14,16 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 
-
 console.log( process.env.TREBLLE_API_KEY )
 console.log( process.env.TREBLLE_PROJECT_ID)
 
 
 // Trebble 
 const trebbleConfig = {
-         apiKey: process.env.TREBLLE_API_KEY,
-         projectId: process.env.TREBLLE_PROJECT_ID,
-         additionalFieldsToMask: [],
-              }
+                        apiKey: process.env.TREBLLE_API_KEY,
+                        projectId: process.env.TREBLLE_PROJECT_ID,
+                        additionalFieldsToMask: [],
+                      }
 
 
 app.use( treblle(trebbleConfig) ) 
