@@ -10,6 +10,9 @@ async function createDatabase() {
   const client = new MongoClient(uri);
 
   try {
+
+    console.log(' Creating API Database ')
+    
     // Connect to the MongoDB server
     await client.connect();
 
