@@ -1,9 +1,16 @@
-var express = require('express');
-var router = express.Router();
+var userRoutes = require('./User/user.route') 
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-module.exports = router;
+module.exports = function(app)
+    {
+      try
+      {
+          userRoutes(app) 
+  
+          console.log('User Routes Created ') 
+      }
+      catch(e)
+      {
+        console.log(' Error occured while building application routes ')
+        console.log(e) 
+      }
+    }
