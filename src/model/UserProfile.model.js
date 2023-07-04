@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 
 
 
-const ProfileSchema = new Schema
+const UserProfileSchema = new Schema
             ( 
                 {
                     username:
@@ -28,6 +28,6 @@ const ProfileSchema = new Schema
             )
 
 
-const Profile = mongoose.model('profile', ProfileSchema )
+const UserProfile = mongoose.model('profile', UserProfileSchema )
 
-module.exports = Profile 
+module.exports = UserProfile 
