@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router() 
+const {body} = require('express-validator')
 const { verifyToken } = require('../authentication/user.auth')
-const {signup, login} = require('../controller/user.controller')
+const {signup, login, getAccount, deleteAccount} = require('../controller/user.controller')
 
 // module.exports = function(app)
 //     {
@@ -19,8 +20,18 @@ const {signup, login} = require('../controller/user.controller')
 //         }
 //     }
 
-router.post('/signup', signup);
-router.post('/login', login);
+router.post(
+    '/signup', 
+    body('email').isEmail(), 
+    body('password')
+    .isLength({min: 8})
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/), 
+    signup
+    );
+    
+router.post('/login', body('email').isEmail(), login);
+router.get('/read', verifyToken, getAccount)
+router.delete('/delete', verifyToken, deleteAccount)
 
 module.exports = router;
 

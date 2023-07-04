@@ -5,6 +5,7 @@ const {
     createUser,
     getUserById,
     getUserByEmail,
+    hashPassword,
     getUserByPhoneNumber
 } = require('../services/user.service')
 
@@ -111,5 +112,51 @@ async function login(req, res) {
     };
 };
 
+async function getAccount(req, res) {
+    try {
+        const user = await getUserById(req.buyer.id);
+        if (!user) {
+            res.status(400).json({
+                success: false,
+                message: "Account not found"
+            });
+            return;
+        };
+        res.status(200).json({ 
+            success: true,
+            user
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Error getting user's account details",
+            error: error.message
+        });
+    };
+};
 
-module.exports = { signup, login }
+async function deleteAccount (req, res) {
+    try {
+        const deletedAccount = await deleteUserAccount(req.user.id)
+        if (deletedAccount === 1) { 
+            res.status(200).send({
+                success: true,
+                message: "Your account has been deleted!"
+            })
+            return
+        };
+        res.status(400).send({
+            success: false,
+            message: "You do not have an account, sign up to create an account"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: 'Error deleting your account',
+            error: error.message
+        });
+    };
+};
+
+
+module.exports = { signup, login, getAccount, deleteAccount }

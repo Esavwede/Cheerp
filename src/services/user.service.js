@@ -7,7 +7,7 @@ async function createUser (user) {
         return newUser
         // return JSON.parse(JSON.stringify(newUser))
     } catch (error) {
-        throw new Error(`Error creating user's account: ${error}`)
+        throw new Error(`Error creating account: ${error}`)
     }
 };
 
@@ -16,7 +16,7 @@ async function getUserById(id) {
         const user = await User.find({id})
         return user
     } catch (error) {
-        throw new Error(`Error getting user's account by id: ${error}`)
+        throw new Error(`Error getting account by id: ${error}`)
     }
 };
 
@@ -25,7 +25,7 @@ async function getUserByEmail(email) {
         const user = await User.find({email})
         return user
     } catch (error) {
-        throw new Error(`Error getting user's account by email: ${error}`)
+        throw new Error(`Error getting account by email: ${error}`)
     }
 };
 
@@ -34,7 +34,26 @@ async function getUserByPhoneNumber(phone_number) {
         const user = await User.find({phone_number})
         return user
     } catch (error) {
-        throw new Error(`Error getting user's account by phone number: ${error}`)
+        throw new Error(`Error getting account by phone number: ${error}`)
+    }
+}
+
+async function hashPassword (password) {
+    try {
+        const saltRounds = 10;
+        const hash = await bcrypt.hash(password, saltRounds);
+        return hash
+    } catch (error) {
+        throw new Error(`Error hashing password: ${error}`);
+    };
+};
+
+async function deleteAccount(id) {
+    try {
+        const deleted = await User.deleteOne({ id })
+        return deleted
+    } catch (error) {
+        throw new Error(`Error deleting password: ${error}`);
     }
 }
 
@@ -42,6 +61,7 @@ const userFunctions = {
     createUser,
     getUserById,
     getUserByEmail,
+    hashPassword,
     getUserByPhoneNumber
 }
 
