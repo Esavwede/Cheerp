@@ -15,12 +15,10 @@ var app = express()
 
 // Trebble 
 const trebbleConfig = {
-                        apiKey: process.env.TREBLLE_API_KEY,
-                        projectId: process.env.TREBLLE_PROJECT_ID,
-                        additionalFieldsToMask: [],
-                      }
-
-
+  apiKey: process.env.TREBLLE_API_KEY,
+  projectId: process.env.TREBLLE_PROJECT_ID,
+  additionalFieldsToMask: [],
+};
 
 app.use(reqLogger('dev'));
 app.use(express.json());
