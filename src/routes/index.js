@@ -1,10 +1,11 @@
-var userRoutes = require('./User/user.route') 
+var userProfileRoutes = require('./UserProfile/userProfile.route')
+
 
 module.exports = function(app)
     {
       try
       {
-          userRoutes(app) 
+          userProfileRoutes(app) 
           
           console.log('User Routes Created ') 
       }
