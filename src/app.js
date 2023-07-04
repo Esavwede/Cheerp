@@ -3,16 +3,14 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan'); 
+var reqLogger = require('morgan'); 
+var logger = require('./system/logger/index') 
 const treblle = require('@treblle/express') 
 const { createDatabaseConnection } = require('./system/database/connection/createDatabaseConnection') 
 var createApiRoutes = require('./routes/index')
+const { createDatabase } = require('./system/database/connection/createDatabase')
 
-var app = express();
-
-
-console.log( process.env.TREBLLE_API_KEY )
-console.log( process.env.TREBLLE_PROJECT_ID)
+var app = express()
 
 
 // Trebble 
@@ -24,7 +22,7 @@ const trebbleConfig = {
 
 
 
-app.use(logger('dev'));
+app.use(reqLogger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -36,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use( treblle(trebbleConfig) ) 
 createDatabaseConnection()
+createDatabase() 
 createApiRoutes(app) 
 
 
@@ -57,5 +56,7 @@ app.use(function(err, req, res, next) {
   console.log(err) 
   res.json({ error: err });
 });
+
+logger.info('Application running ') 
 
 module.exports = app;
