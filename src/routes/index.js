@@ -5,7 +5,7 @@ module.exports = function(app)
       try
       {
           userRoutes(app) 
-  
+          
           console.log('User Routes Created ') 
       }
       catch(e)

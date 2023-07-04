@@ -7,6 +7,7 @@ var logger = require('morgan');
 const treblle = require('@treblle/express') 
 const { createDatabaseConnection } = require('./system/database/connection/createDatabaseConnection') 
 var createApiRoutes = require('./routes/index')
+const { createDatabase } = require('./system/database/connection/createDatabase')
 
 var app = express();
 
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use( treblle(trebbleConfig) ) 
 createDatabaseConnection()
+createDatabase() 
 createApiRoutes(app) 
 
 

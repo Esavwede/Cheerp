@@ -8,8 +8,8 @@ function create( user )
         try 
         {
             const newUser = new User( user )
-            const result = await newUser.save()
-            resolve() 
+            const result = await newUser.save() 
+            resolve()
         }
         catch(e)
         {
