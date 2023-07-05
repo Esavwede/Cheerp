@@ -27,6 +27,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+function isLoggedIn(req, res, next) {
+  req.user ? next() : res.status(401);
+};
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.get(
@@ -67,20 +72,21 @@ app.get("/auth/google/failure", async (req, res) => {
 
 app.get("/error", (req, res) => res.send("Error logging in via Google.."));
 
-app.get("/auth/google/signout", (req, res) => {
-  try {
-    res.status(200).send({ message: "user signed out" });
-  } catch (err) {
-    res.status(400).send({ message: "Failed to sign out user" });
-  }
-});
+// app.get("/auth/google/signout", (req, res) => {
+//   try {
+//     res.status(200).send({ message: "user signed out" });
+//   } catch (err) {
+//     res.status(400).send({ message: "Failed to sign out user" });
+//   }
+// });
+
 
 
 
 
 // app.use( treblle(trebbleConfig) ) 
 createDatabaseConnection()
-createDatabase() 
+// createDatabase() 
 createApiRoutes(app) 
 
 
