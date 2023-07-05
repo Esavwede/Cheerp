@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-// app.use( treblle(trebbleConfig) ) 
+app.use( treblle(trebbleConfig) ) 
 createDatabaseConnection()
 createDatabase() 
 createApiRoutes(app) 

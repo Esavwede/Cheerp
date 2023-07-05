@@ -7,11 +7,9 @@ async function find(req, res, next)
 {
     try 
     {
-
-        const userId = req.params.id 
-        
+        const userId = req.params.uuid 
         const userProfile  =  await UserProfile.find( userId  )
-        return res.status(200).json({ message: 'User profile fetched ', userProfile })
+        return res.status(200).json({ "message": 'User profile fetched ', userProfile })
     }
     catch(e)
     {
@@ -26,11 +24,10 @@ async function edit(req, res, next)
     try 
     {
 
-        const userId = req.params.id 
-        const fields = req.body.fields
-        
-        const updatedUserProfile =  await UserProfile.edit( userId, fields )
-        return res.status(201).json({ message: ' user profile edited ', updatedUserProfile })
+        const userId = req.params.uuid 
+        const fields = req.body
+        await UserProfile.edit( userId, fields )
+        return res.status(201).json({ "message": ' user profile edited ' })
     }
     catch(e)
     {
