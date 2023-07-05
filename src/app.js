@@ -1,6 +1,6 @@
 require('dotenv').config() ;
-const passport = require('passport');
-require('./authentication/google-auth');
+// const passport = require('passport');
+// require('./authentication/google-auth');
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -11,8 +11,9 @@ const treblle = require('@treblle/express')
 const { createDatabaseConnection } = require('./system/database/connection/createDatabaseConnection') 
 var createApiRoutes = require('./routes/index')
 const { createDatabase } = require('./system/database/connection/createDatabase')
-
-var app = express()
+const auth = require('./authentication/google-auth')
+const account = require('./routes/user.route')
+const app = express()
 
 
 // Trebble 
@@ -28,67 +29,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-function isLoggedIn(req, res, next) {
-  req.user ? next() : res.status(401);
-};
-
-app.use(passport.initialize());
-app.use(passport.session());
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
-);
-
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "/auth/google/success",
-    failureRedirect: "/auth/google/failure",
-    passReqToCallback: true,
-  })
-);
-
-app.get("/auth/google/success", isLoggedIn, async (req, res) => {
-  try {
-    const user = req.user;
-    if (user) {
-      const details = {
-        // firstName: user.name.givenName,
-        // lastName: user.name.familyName,
-        email: user.email,
-        phone_number: user.phone_number,
-      };
-      console.log(details);
-      res.status(200).json({ user: { ...details } });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(400).send({ message: "An error occured for success" });
-  }
-});
-app.get("/auth/google/failure", async (req, res) => {
-  res.status(400).send({ message: "An error occured for failure" });
-});
-
-app.get("/error", (req, res) => res.send("Error logging in via Google.."));
-
-// app.get("/auth/google/signout", (req, res) => {
-//   try {
-//     res.status(200).send({ message: "user signed out" });
-//   } catch (err) {
-//     res.status(400).send({ message: "Failed to sign out user" });
-//   }
-// });
-
-
-
-
-
 app.use( treblle(trebbleConfig) ) 
 createDatabaseConnection()
 // createDatabase() 
 createApiRoutes(app) 
-
 
 
 // catch 404 and forward to error handler
@@ -108,7 +52,9 @@ app.use(function(err, req, res, next) {
   console.log(err) 
   res.json({ error: err });
 });
+app.use('/auth', auth);
+app.use('/account', account);
 
-logger.info('Application running ') 
+logger.info('Application running '); 
 
 module.exports = app;

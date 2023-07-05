@@ -3,23 +3,9 @@ const router = express.Router()
 const {body} = require('express-validator')
 const { verifyToken } = require('../authentication/user.auth')
 const {signup, login, getAccount, deleteAccount} = require('../controller/user.controller')
+const limiter = require('../middlewares/rateLimiter')
 
-// module.exports = function(app)
-//     {
-//         try 
-//         {
-//             router.post('/', user.create )
-//             app.use('/user', router )
-            
-//             console.log(' User routes created ')
-//         }
-//         catch(e)
-//         {
-//             console.log(' Error occured while creating user routes ')
-//             console.log(e) 
-//         }
-//     }
-
+router.use(limiter)
 router.post(
     '/signup', 
     body('email').isEmail(), 
