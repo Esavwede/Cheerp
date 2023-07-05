@@ -27,7 +27,7 @@ function find( userId )
         UserProfile.findOne({ userId } )
         .then(( userProfile )=>
         {
-            logger.info('User profile edited ')
+            logger.info('User profile found ')
             resolve( userProfile )
         })
         .catch((e)=>
