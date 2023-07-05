@@ -10,10 +10,9 @@ module.exports = function(app)
         try 
         {
             
-            router.post('/', UserProfile.edit ) 
-            router.get('/', UserProfile.find )
-
-            app.use('/users/:id/profiles', router )
+            router.put('/users/:id/profiles', UserProfile.edit ) 
+            router.get('/users/:id/profiles', UserProfile.find )
+            app.use('/api/v1', router )
             
             logger.info(' User Profile Routes Created ')  
         }
