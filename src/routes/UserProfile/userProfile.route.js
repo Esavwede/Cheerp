@@ -2,16 +2,19 @@ const logger = require('../../system/logger/index')
 
 const express = require('express')
 const router = express.Router() 
-const UserProfile = require('../../controller/UserProfile/userProfile.controller') 
-
+const UserProfileService = require('../../controller/UserProfile/userProfile.controller') 
+const UserMessages = require('../../controller/messages/message.controller') 
 
 module.exports = function(app)
     {
         try 
         {
             
-            router.put('/users/:id/profiles', UserProfile.edit ) 
-            router.get('/users/:id/profiles', UserProfile.find )
+            
+            router.get('/users/:uuid/profiles', UserProfileService.find )
+            router.patch('/users/:uuid/profiles', UserProfileService.edit ) 
+            router.get('/users/:id/messages', UserMessages.getMessagesPreviews  )
+            
             app.use('/api/v1', router )
             
             logger.info(' User Profile Routes Created ')  

@@ -28,6 +28,6 @@ const UserProfileSchema = new Schema
             )
 
 
-const UserProfile = mongoose.model('profile', UserProfileSchema )
+const UserProfile = mongoose.model('userprofile', UserProfileSchema )
 
 module.exports = UserProfile 

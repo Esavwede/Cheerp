@@ -13,6 +13,10 @@ const UserSchema = new Schema
                         required: true,
                         trim: true
                     },
+                    messagesIds:
+                    {
+                        type:[String]
+                    },
                     email:
                     {
                         type: String, 
