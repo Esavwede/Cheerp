@@ -84,7 +84,7 @@ app.get("/error", (req, res) => res.send("Error logging in via Google.."));
 
 
 
-// app.use( treblle(trebbleConfig) ) 
+app.use( treblle(trebbleConfig) ) 
 createDatabaseConnection()
 // createDatabase() 
 createApiRoutes(app) 
