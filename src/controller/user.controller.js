@@ -74,14 +74,6 @@ async function login(req, res) {
        };
        const {phone_number, password} = req.body;
 
-       // Validate email
-        if (!errors.isEmpty()) {
-            const error = errors.array()[0];
-            if (error.param === 'email') {
-            return res.status(400).json({success: false, message: 'Please enter a valid email address'});
-            }
-        }
- 
        // Check if email entered is correct or registered
        const user = await getUserByEmail(email);
        if (!user) {
