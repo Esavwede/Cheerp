@@ -1,6 +1,5 @@
-const {validationResult} = require('express-validator')
-const {generateToken} = require('../authentication/user.auth')
-const user = require('../services/user.service') 
+const {validationResult} = require('express-validator');
+const {generateToken} = require('../authentication/user.auth');
 const {
     createUser,
     getUserById,

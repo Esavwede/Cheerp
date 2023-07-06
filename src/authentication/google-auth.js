@@ -72,6 +72,4 @@ router.get("/google/failure", async (req, res) => {
 
 router.get("/error", (req, res) => res.send("Error logging in via Google.."));
 
-
-
 module.exports = router;

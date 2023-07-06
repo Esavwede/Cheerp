@@ -3,7 +3,7 @@ const router = express.Router()
 const {body} = require('express-validator')
 const { verifyToken } = require('../authentication/user.auth')
 const {signup, login, getAccount, deleteAccount} = require('../controller/user.controller')
-const limiter = require('../middlewares/rateLimiter')
+const limiter = require('../middlewares/methodAndRateLimiter')
 
 router.use(limiter)
 router.post(

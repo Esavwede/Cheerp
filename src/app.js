@@ -1,6 +1,4 @@
 require('dotenv').config() ;
-// const passport = require('passport');
-// require('./authentication/google-auth');
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
