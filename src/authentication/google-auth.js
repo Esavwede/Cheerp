@@ -2,7 +2,7 @@ const passport = require("passport");
 var GoogleStrategy = require("passport-google-oauth2").Strategy;
 const express = require('express');
 const router = express.Router();
-const limiter = require('../middlewares/rateLimiter')
+const limiter = require('../middlewares/methodAndRateLimiter')
 require("dotenv").config();
 
 passport.use(
