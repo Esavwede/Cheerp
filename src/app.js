@@ -11,7 +11,7 @@ var logger = require('./system/logger/index')
 const treblle = require('@treblle/express') 
 const { createDatabaseConnection } = require('./system/database/connection/createDatabaseConnection') 
 var createApiRoutes = require('./routes/index')
-
+var helmet = require('helmet') 
 
 var app = express()
 
@@ -22,6 +22,12 @@ const trebbleConfig = {
   projectId: process.env.TREBLLE_PROJECT_ID,
   additionalFieldsToMask: [],
 };
+
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable Content Security Policy
+  dnsPrefetchControl: true // Enable DNS Prefetch Control
+}));
+
 
 app.use(reqLogger('dev'));
 app.use(express.json());
@@ -89,9 +95,7 @@ app.get("/error", (req, res) => res.send("Error logging in via Google.."));
 
 
 
-
-
-//app.use( treblle(trebbleConfig) ) 
+app.use( treblle(trebbleConfig) ) 
 createDatabaseConnection()
 createApiRoutes(app) 
 

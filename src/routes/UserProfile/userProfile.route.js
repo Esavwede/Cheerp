@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router() 
 const UserProfileService = require('../../controller/UserProfile/userProfile.controller') 
 const UserMessages = require('../../controller/messages/message.controller') 
+const {verifyToken} = require('../../authentication/user.auth.js') 
 
 module.exports = function(app)
     {
@@ -11,9 +12,9 @@ module.exports = function(app)
         {
             
             
-            router.get('/users/:uuid/profiles', UserProfileService.find )
-            router.patch('/users/:uuid/profiles', UserProfileService.edit ) 
-            router.get('/users/:id/messages', UserMessages.getMessagesPreviews  )
+            router.get('/users/:uuid/profiles', verifyToken, UserProfileService.find )
+            router.patch('/users/:uuid/profiles', verifyToken,  UserProfileService.edit )
+            
             
             app.use('/api/v1', router )
             

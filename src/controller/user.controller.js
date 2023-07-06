@@ -13,6 +13,7 @@ const {
     getUserByPhoneNumber
 } = require('../services/user.service')
 
+const  userProfileService = require('../services/UserProfile/profile.service') 
 
 
 async function signup(req, res) {
@@ -58,7 +59,7 @@ async function signup(req, res) {
         const hashed_password = await hashPassword(password);
         const userId = uuidv4() 
         const user = await createUser({email, phone_number, password: hashed_password, userId})
-
+        await userProfileService.create( user.userId, {} )
 
         res.status(201).json({ 
             success: true,

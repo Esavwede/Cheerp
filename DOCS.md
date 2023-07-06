@@ -82,7 +82,7 @@ Response
 
 Get messages Preview
 
-Endpoint: http://localhost:3000/api/v1/users/02a035b5-d9fa-439b-b4d8-43f5f98caeb8/messages/
+Endpoint: http://localhost:3000/api/v1/users/id/messages/
 Method: Get 
 
 
@@ -102,7 +102,7 @@ Response
 
 Get Messsage 
 
-Endpoint: http://localhost:3000/api/v1/users/02a035b5-d9fa-439b-b4d8-43f5f98caeb8/messages/07cd3c21-374e-4e81-a1cd-d94a3d4f1092
+Endpoint: http://localhost:3000/api/v1/users/id/messages/messageId
 
 Method: GET 
 
@@ -142,3 +142,37 @@ Response
 	"message": " Message Deleted Successfully "
 }
 
+
+
+User Profile 
+
+
+Get User Profile 
+
+Endpoint: http://localhost:3000/api/v1/users/:id/profiles
+
+Method: GET 
+
+Response 
+
+{
+	"message": "User profile fetched ",
+	"userProfile": {
+		"displayName": "User",
+		"_id": "64a5086a3cd6ab5e2ca6fea8",
+		"bio": "refreshed",
+		"userId": "64a49a0f8076a4dfb4f06fb1"
+	}
+}
+
+
+Update User Profile 
+
+ENDPOINT: Endpoint: http://localhost:3000/api/v1/users/:id/profiles
+Method: PATCH
+
+Response 
+
+{
+	"message": " user profile edited "
+}
