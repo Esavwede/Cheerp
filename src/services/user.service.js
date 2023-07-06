@@ -1,15 +1,20 @@
 const User = require('../model/User.model');
 const bcrypt = require('bcrypt');
+const { omit } = require('lodash') 
+
 
 async function createUser (user) {
     try {
-        const newUser = await User.create(user)
-        return newUser
-        // return JSON.parse(JSON.stringify(newUser))
+        var newUser = await User.create(user)
+        newUser = newUser.toJSON() 
+        newUser = omit( newUser, ['password','messagesIds'] )
+        console.log( newUser ) 
+        return newUser 
     } catch (error) {
         throw new Error(`Error creating account: ${error}`)
     }
 };
+
 
 async function getUserById(id) {
     try {
@@ -22,7 +27,7 @@ async function getUserById(id) {
 
 async function getUserByEmail(email) {
     try {
-        const user = await User.find({email})
+        const user = await User.findOne({email})
         return user
     } catch (error) {
         throw new Error(`Error getting account by email: ${error}`)
@@ -31,7 +36,7 @@ async function getUserByEmail(email) {
 
 async function getUserByPhoneNumber(phone_number) {
     try {
-        const user = await User.find({phone_number})
+        var user = await User.findOne({phone_number},{ userId: 1, email: 1, phone_number: 1, messagesIds: 1,  _id: 0 })
         return user
     } catch (error) {
         throw new Error(`Error getting account by phone number: ${error}`)

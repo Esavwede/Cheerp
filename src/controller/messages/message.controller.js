@@ -2,34 +2,41 @@ const logger = require('../../system/logger/index')
 const UsersMessagesService = require('../../services/Message/message.service') 
 const { v4: uuidv4 } = require('uuid');
 
+
 async function send(req, res, next)
 {
     try 
     {
         
-        var messageId = req.params.id 
+        // Get message Id from URL 
+        var messageId = req.body.messageId
 
-
-        if( messageId === 'null' )
+        if( messageId === 'null' || messageId === null )
         {
             messageId = uuidv4();
+            console.log(' New Message Id created ')
         }
 
-        const messageBody = req.body
-        messageBody.messageId = uuidv4() 
 
-        const lastMessagePreview = req.body.textContent 
-        var senderId  = req.body.senderId 
+        // Add message id to message body 
+        var senderId = req.params.id 
         var receiverId = req.body.receiverId 
 
+        const messageBody = req.body
+        messageBody.senderId = senderId 
+
+        const lastMessagePreview = req.body.textContent 
+        
+
+        console.log( messageId + '  ' + messageBody + ' ' + ' lastMessagePreview ' ) 
         await UsersMessagesService.send( messageId, messageBody, lastMessagePreview )
-        return res.status(201).json({ message:" New Message Sent "})
+        return res.status(201).json({ success: true, message:" New Message Sent "})
 
     }
     catch(e)
     {
         logger.error(e,`Error occured while sending message from  user:${ senderId } to user:${ receiverId}`) 
-        return res.status(500).json({ "message":" could not send new Message "})
+        return res.status(500).json({ success: false, "message":" could not send new Message "})
     }
 }
 
@@ -38,9 +45,14 @@ async function getMessagesPreviews(req, res, next)
 {
     try 
     {
-        const userId = req.params.id 
+        const userId = req.params.id
         const userMessagesPreview = await UsersMessagesService.getMessagesPreviews( userId ) 
-        return res.status(201).json({ userMessagesPreview })
+        if( userMessagesPreview.length < 1 )
+        {
+            return res.status(200).json({ success: false, message:"could not find messages for this user"})
+        }
+
+        return res.status(200).json({ userMessagesPreview })
     }
     catch(e)
     {
@@ -56,8 +68,8 @@ async function getMessage(req, res, next)
     {
         const userId = req.params.id 
         const messageId = req.params.messageId
-        const userMessagesPreview = await UsersMessagesService.getMessage( userId, messageId ) 
-        return res.status(200).json({ userMessagesPreview })
+        const messages = await UsersMessagesService.getMessage( userId, messageId ) 
+        return res.status(200).json({ messages })
     }
     catch(e)
     {

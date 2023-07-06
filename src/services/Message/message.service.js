@@ -15,8 +15,8 @@ function send( messageId, messageBody, lastMessagePreview )
 
             console.log( lastMessagePreview ) 
 
-            var userId1 = messageBody.senderId 
-            var userId2 = messageBody.receiverId 
+            var userOneId = messageBody.senderId 
+            var userTwoId = messageBody.receiverId 
 
             const session = await mongoose.startSession();
             session.startTransaction();
@@ -25,7 +25,7 @@ function send( messageId, messageBody, lastMessagePreview )
 
             const filter = { messageId }
             const update = { $push: { messages: messageBody }, 
-                             $set: { messageId: messageId,  lastMessagePreview: lastMessagePreview} }
+                             $set: { messageId: messageId,  lastMessagePreview: lastMessagePreview, userOneId, userTwoId } }
 
             const options = { new: false, upsert: true }
              
@@ -57,7 +57,7 @@ function send( messageId, messageBody, lastMessagePreview )
 
 
                     logger.info(' new message details created for message ')
-                    const filter = { $or: [ { userId: userId1 }, { userId: userId2 } ] };
+                    const filter = { $or: [ { userId: userOneId }, { userId: userTwoId } ] };
                     const update = { $addToSet: { messagesIds: messageId } }
                     const options = { upsert: true } 
 
@@ -88,8 +88,10 @@ function getMessagesPreviews( userId )
         try
         {
             const filter = { $or: [ { userOneId: userId }, { userTwoId: userId } ] }
-            const returnFields = { lastMessagePreview: 1 }
+            const returnFields = { lastMessagePreview: 1, messageId: 1 }
             const messagesPreviews =  await UserMessages.find(filter, returnFields )
+
+            console.dir( messagesPreviews ) 
 
             resolve( messagesPreviews ) 
         }
@@ -108,7 +110,7 @@ function getMessage(  userId, messageId )
         try
         {
             const filter = { messageId: messageId, $or: [ { userOneId: userId }, { userTwoId: userId } ] }
-            const returnFields = { messages: 1 }
+            const returnFields = { messages: 1, messageId: 1 }
             const message =  await UserMessages.findOne(filter, returnFields )
 
             resolve( message ) 

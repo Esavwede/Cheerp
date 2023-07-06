@@ -24,7 +24,7 @@ const UserSchema = new Schema
                         unique: true, 
                         trim: true 
                     },
-                    phoneNumber:
+                    phone_number:
                     {   
                         type: String,
                         required: false,
@@ -36,13 +36,6 @@ const UserSchema = new Schema
                         type: String, 
                         required: true,
                         minlength: 6 
-                    }, 
-                    phoneNumberVerificationCode:
-                    {
-                        type: String, 
-                        required: false, 
-                        trim: true,
-                        unique: false 
                     }
                 },
                 {

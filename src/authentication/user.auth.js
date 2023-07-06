@@ -9,9 +9,10 @@ if (!secret) {
     );
   };
 
+
 function generateToken(payload) {
     return new Promise((resolve, reject) => {
-        jwt.sign(payload, secret, {expiresIn: '10m'}, function(error, token) {
+        jwt.sign(payload, secret, {expiresIn: '50m'}, function(error, token) {
             if (error) reject(error)
             resolve(token)
         })
@@ -19,12 +20,12 @@ function generateToken(payload) {
 };
 
 function verifyToken(req, res, next) {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    if (token == null) return res.sendStatus(401)
+    const token = req.headers['authorization']
+    
+    if ( !token ) return res.sendStatus(401)
 
     jwt.verify(token, secret, function(err, user) {
-        if (err) return res.status(403).send({
+        if (err) return res.status(403).json({
             errno : 100,
             message: "Token expired, please login."
         })

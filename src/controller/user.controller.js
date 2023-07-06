@@ -1,6 +1,10 @@
 const {validationResult} = require('express-validator')
 const {generateToken} = require('../authentication/user.auth')
 const user = require('../services/user.service') 
+const { v4: uuidv4 } = require('uuid');
+const logger = require('../system/logger/index') 
+
+
 const {
     createUser,
     getUserById,
@@ -8,6 +12,8 @@ const {
     hashPassword,
     getUserByPhoneNumber
 } = require('../services/user.service')
+
+
 
 async function signup(req, res) {
     const errors = validationResult(req)
@@ -34,25 +40,32 @@ async function signup(req, res) {
         }
      
         // Check if email is already registered
-        if (await getUserByEmail(email)) { 
+        const userExists = await getUserByEmail(email)
+
+        if ( userExists !== null ) { 
             res.status(400).json({ success: false, message: "Email is already registered"}) 
             return;
         };
 
         // Check if phone number is already registered
-        if (await getUserByPhoneNumber(phone_number)) {
-            res.status(400).json({ success: false, message: "Username is already taken"}) 
+        const phoneNumberExists = await getUserByPhoneNumber(phone_number)
+        if ( phoneNumberExists !== null ) {
+            res.status(400).json({ success: false, message: "Phone number Registered is already"}) 
             return;
         };
        
         // Hash password, create user and return message to user
         const hashed_password = await hashPassword(password);
-        await createUser({email, phone_number, hashed_password});
-        const user = await getUserByEmail(email)
+        const userId = uuidv4() 
+        const user = await createUser({email, phone_number, password: hashed_password, userId})
+
+
         res.status(201).json({ 
             success: true,
             message : "Your account has been created successfully", 
             user}) 
+
+
     } catch (error) {
         return res.status(500).json({
             success: false,
@@ -63,7 +76,9 @@ async function signup(req, res) {
 };
 
 async function login(req, res) {
+
     const errors = validationResult(req)
+
     try {
        if (!req.body.phone_number || !req.body.password) {
           res.status(400).json({ 
@@ -75,34 +90,50 @@ async function login(req, res) {
        const {phone_number, password} = req.body;
 
        // Check if email entered is correct or registered
-       const user = await getUserByEmail(email);
-       if (!user) {
+       const user = await getUserByPhoneNumber(phone_number)
+
+       if ( user === null ) {
           res.status(400).json({ success: false, message: "Account not found"})
           return;
        };
        
-       // Check if user entered a correct password
-       const collectedPassword = await retrieveHashedPassword(email)
-       if (await confirmRetrievedPassword(password, collectedPassword) !== true) {
-          res.status(400).json({ success: false, message: "You have entered an incorrect password"})
-          return;
-       };
-        
-       const token = await generateToken(user);
-        res.status(200).json({
+       const token = await generateToken( user.toJSON() );
+       
+       res.status(200).json({
             success: true,
             message: "You have successfully logged in",
             user, 
             token
        });
-    } catch (error) {
+
+    } catch (e) {
+        logger.error(e,' Signin Error ') 
         return res.status(500).json({
             success: false,
-            message: "An error occurred while logging in buyer",
-            error: error.message
+            message: "An error occurred during signin "
         });
     };
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 async function getAccount(req, res) {
     try {

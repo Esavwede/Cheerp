@@ -1,15 +1,14 @@
 var userProfileRoutes = require('./UserProfile/userProfile.route')
-var userMessageRoutes = require('./message/message.route')
 var userRoutes = require('./_user/userRoutes') 
-
+var _userRoutes = require('./user/user.route')
 
 module.exports = function(app)
     {
       try
       {
           userProfileRoutes(app) 
-          userMessageRoutes(app) 
           userRoutes(app) 
+          _userRoutes(app) 
 
 
           console.log('User Routes Created ') 
