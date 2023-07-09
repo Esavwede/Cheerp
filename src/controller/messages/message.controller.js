@@ -40,7 +40,6 @@ async function send(req, res, next)
     }
 }
 
-
 async function getMessagesPreviews(req, res, next)
 {
     try 
@@ -61,7 +60,6 @@ async function getMessagesPreviews(req, res, next)
     }
 }
 
-
 async function getMessage(req, res, next)
 {
     try 
@@ -77,7 +75,6 @@ async function getMessage(req, res, next)
         return res.status(500).json({ "message":" could not get user message "})
     }
 }
-
 
 async function deleteMessage(req, res, next)
 {

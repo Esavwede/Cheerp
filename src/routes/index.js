@@ -1,6 +1,6 @@
 var userProfileRoutes = require('./UserProfile/userProfile.route')
 var userRoutes = require('./_user/userRoutes') 
-var _userRoutes = require('./user/user.route')
+var authRoutes = require('./auth/auth.route') 
 
 module.exports = function(app)
     {
@@ -8,8 +8,7 @@ module.exports = function(app)
       {
           userProfileRoutes(app) 
           userRoutes(app) 
-          _userRoutes(app) 
-
+          authRoutes(app) 
 
           console.log('User Routes Created ') 
           

@@ -1,75 +1,59 @@
-const passport = require("passport");
-var GoogleStrategy = require("passport-google-oauth2").Strategy;
-const express = require('express');
-const router = express.Router();
-const limiter = require('../middlewares/methodAndRateLimiter')
-require("dotenv").config();
+require('dotenv').config() 
+const passport = require('passport')
+const GoogleStrategy = require('passport-google-oauth2')
+const User = require('../model/User.model') 
+const { omit } = require('lodash')
+const logger = require('../system/logger/index') 
+const { v4: uuidv4 } = require('uuid');
+
+
+const authCredentials = 
+    {
+      clientID: process.env.GOOGLE_AUTH_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET , 
+      callbackURL: process.env.GOOGLE_AUTH_CALLBACK_URL 
+    }
+
+
+async function authCallBack( accessToken, refreshToken, profile, done )
+{
+    try 
+    {
+          // Find User with email 
+          const googleId = profile.id 
+          const displayName = profile.displayName 
+          const email = profile.emails[0].value 
+          var user = await User.findOne({ email },{  password: 0, messagesIds: 0})
+
+
+          if( !user )
+          {
+            // create new user 
+            logger.info(' User not found in database ')
+            const userId = uuidv4() 
+            var newUser = new User({ userId, email, googleId, displayName  })
+            await newUser.save()
+        
+            return done( null, newUser )
+          }
+
+          done( null, user )
+    }
+    catch(e)
+    {
+        logger.error(e,'Google Signin Error ')
+    }
+}
 
 passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.CALLBACK_URL,
-      passReqToCallback: true,
-    },
-    function (request, accessToken, refreshToken, profile, done) {
-      return done(null, profile);
-    }
-  )
-);
+  new GoogleStrategy( authCredentials , authCallBack )
+)
 
+
+// Serialize user
 passport.serializeUser((user, done) => {
-  done(null, user);
-});
-passport.deserializeUser((user, done) => {
-  done(null, user);
+  done(null, user.id);
 });
 
 
-function isLoggedIn(req, res, next) {
-  req.user ? next() : res.status(401);
-};
-
-router.use(passport.initialize());
-router.use(passport.session());
-router.get(
-  "/google",
-  limiter,
-  passport.authenticate("google", { scope: ["email", "profile"] })
-);
-
-router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "/auth/google/success",
-    failureRedirect: "/auth/google/failure",
-    passReqToCallback: true,
-  })
-);
-
-router.get("/google/success", isLoggedIn, async (req, res) => {
-  try {
-    const user = req.user;
-    if (user) {
-      const details = {
-        // firstName: user.name.givenName,
-        // lastName: user.name.familyName,
-        email: user.email,
-        phone_number: user.phone_number,
-      };
-      console.log(details);
-      res.status(200).json({ user: { ...details } });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(400).send({ message: "An error occured for success" });
-  }
-});
-router.get("/google/failure", async (req, res) => {
-  res.status(400).send({ message: "An error occured for failure" });
-});
-
-router.get("/error", (req, res) => res.send("Error logging in via Google.."));
-
-module.exports = router;
+module.exports = passport 
