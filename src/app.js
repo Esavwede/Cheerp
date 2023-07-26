@@ -2,6 +2,7 @@ require('dotenv').config()
 require('./authentication/google-auth');
 var createError = require('http-errors');
 var express = require('express');
+const compression = require('compression') 
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var reqLogger = require('morgan'); 
@@ -30,6 +31,8 @@ app.use(helmet({
   dnsPrefetchControl: true // Enable DNS Prefetch Control
 }));
 
+
+app.use( compression() )
 
 app.use(reqLogger('dev'));
 app.use(express.json());
