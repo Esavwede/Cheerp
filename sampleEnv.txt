@@ -1,0 +1,12 @@
+
+DB_URI=mongodb://127.0.0.1:27017/cheerpdb // Replace with your database URI
+APPLICATION_LOG_LEVEL=trace
+PAYLOAD_SECRET=lfadfaeifaers // replace with your own  random string 
+JWT_SECRET=AFSFDAEFA9EFAE // replace with your own jwt secret
+JWT_EXPIRATION_TIME="50m" // replace as needed
+NODE_ENV=development
+DB_NAME=cheerp-test
+SESSION_SECRET=ASafejaeoaf9efjESFSAKEIA // For passport js, replace with your own random string 
+GOOGLE_AUTH_CLIENT_ID= // replace with your GOOGLE_AUTH_CLIENT_ID
+GOOGLE_AUTH_CLIENT_SECRET=// replace with your GOOGLE_AUTH_CLIENT_SECRET
+GOOGLE_AUTH_CALLBACK_URL= // replace with your GOOGLE_AUTH_CALLBACK_URL

@@ -7,6 +7,7 @@ function authenticateToken(req, res, next)
 {
     try 
     {   
+console.log('--DEBUG--')
         const token = req.header('Authorization')
 
         if( !token )

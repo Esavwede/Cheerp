@@ -1,5 +1,5 @@
 
-
+require('dotenv').config() 
 const pino = require('pino') 
 
 const devLogger = pino(
@@ -17,7 +17,7 @@ const devLogger = pino(
                //   }
                ]
             },
-            level: process.env.APPLICATION_LOG_LEVEL || 'info', 
+            level: 'info', 
             timestamp: pino.stdTimeFunctions.isoTime 
         }
     ) 

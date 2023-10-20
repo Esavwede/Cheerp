@@ -10,16 +10,21 @@ async function send(req, res, next)
         
         // Get message Id from URL 
         var messageId = req.body.messageId
+        
 
-        if( messageId === 'null' || messageId === null )
+        if( !messageId )
         {
             messageId = uuidv4();
             console.log(' New Message Id created ')
         }
+        else 
+        {
+            console.log("Did not message Id not null")
+        }
 
 
         // Add message id to message body 
-        var senderId = req.params.id 
+        var senderId = req.params.senderId
         var receiverId = req.body.receiverId 
 
         const messageBody = req.body
@@ -27,7 +32,7 @@ async function send(req, res, next)
 
         const lastMessagePreview = req.body.textContent 
         
-
+        console.log(' Debug ' + ': message id' + messageId ) 
         console.log( messageId + '  ' + messageBody + ' ' + ' lastMessagePreview ' ) 
         await UsersMessagesService.send( messageId, messageBody, lastMessagePreview )
         return res.status(201).json({ success: true, message:" New Message Sent "})
@@ -39,6 +44,7 @@ async function send(req, res, next)
         return res.status(500).json({ success: false, "message":" could not send new Message "})
     }
 }
+
 
 async function getMessagesPreviews(req, res, next)
 {
@@ -59,6 +65,7 @@ async function getMessagesPreviews(req, res, next)
         return res.status(500).json({ "message":" could not send new Message "})
     }
 }
+
 
 async function getMessage(req, res, next)
 {

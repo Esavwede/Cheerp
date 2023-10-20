@@ -6,6 +6,7 @@ const SignupSchema = require('../../validation/schemas/signup.schema')
 const { findUserByEmail, signupUser } = require('../../services/auth/auth.service')
 const { _400response, _409response } = require('../../utils/functions/response') 
 const { v4: uuidv4 } = require('uuid');
+const { json } = require('express')
 
 
 function authSuccessful(req, res )
@@ -43,8 +44,9 @@ async function signup(req, res)
         if( userExists ){ return _409response(res,"email taken ")}
 
         user.userId = uuidv4() 
-        const newUser = await signupUser( user )
+        var newUser = await signupUser( user )
 
+        newUser = { userId: newUser.userId, firstname: newUser.firstname, lastname: newUser.lastname, email: newUser.email }
         return res.status(201).json({ success: true, message:"user signedup successfully ", user: newUser })
     }
     catch(e)

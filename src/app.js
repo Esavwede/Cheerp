@@ -6,8 +6,7 @@ const compression = require('compression')
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var reqLogger = require('morgan'); 
-var logger = require('./system/logger/index') 
-const treblle = require('@treblle/express') 
+var logger = require('./system/logger/index')
 const { createDatabaseConnection } = require('./system/database/connection/createDatabaseConnection') 
 var createApiRoutes = require('./routes/index')
 var helmet = require('helmet') 
@@ -18,12 +17,6 @@ const session = require('express-session')
 var app = express()
 
 
-// Trebble 
-const trebbleConfig = {
-  apiKey: process.env.TREBLLE_API_KEY,
-  projectId: process.env.TREBLLE_PROJECT_ID,
-  additionalFieldsToMask: [],
-};
 
 
 app.use(helmet({
@@ -50,7 +43,6 @@ app.use( passport.initialize()   )
 app.use( passport.session() )
 
 
-//app.use( treblle(trebbleConfig) ) 
 createDatabaseConnection()
 createApiRoutes(app) 
 

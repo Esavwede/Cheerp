@@ -19,9 +19,9 @@ async function authCallBack( accessToken, refreshToken, profile, done )
 {
     try 
     {
+
+  
           // Find User with email 
-          const googleId = profile.id 
-          const displayName = profile.displayName 
           const email = profile.emails[0].value 
           var user = await User.findOne({ email },{  password: 0, messagesIds: 0})
 
@@ -29,13 +29,18 @@ async function authCallBack( accessToken, refreshToken, profile, done )
           if( !user )
           {
             // create new user 
-            logger.info(' User not found in database ')
+            logger.info(' Google user not yet signup  ')
+            logger.info(' Creating new User ')
             const userId = uuidv4() 
-            var newUser = new User({ userId, email, googleId, displayName  })
+            const firstname = profile.given_name
+            const lastname = profile.family_name
+            var newUser = new User({ userId, email, firstname, lastname })
             await newUser.save()
         
+            logger.info(' User saved ') 
             return done( null, newUser )
           }
+
 
           done( null, user )
     }

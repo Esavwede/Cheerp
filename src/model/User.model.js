@@ -34,18 +34,10 @@ const UserSchema = new Schema
                         unique: true, 
                         trim: true 
                     },
-                    phone_number:
-                    {   
-                        type: String,
-                        required: false,
-                        trim: true, 
-                        unique: true 
-                    },
                     password:
                     {
                         type: String, 
-                        minlength: 6, 
-                        required: true 
+                        minlength: 6
                     }
                 },
                 {

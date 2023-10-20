@@ -3,7 +3,6 @@ const router = express.Router()
 const logger = require('../../system/logger/index') 
 const passport  = require('../../authentication/google-auth')
 const { authSuccessful, signup, signin} = require('../../controller/auth/auth.controller')
-const authenticateToken = require('../../middlewares/auth/authToken')
 
 
 module.exports = function(app)

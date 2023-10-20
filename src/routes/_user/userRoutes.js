@@ -4,6 +4,7 @@ const express = require('express')
 const router = express.Router()  
 const UserMessages = require('../../controller/messages/message.controller') 
 const {verifyToken} = require('../../authentication/user.auth.js') 
+const authenticateToken = require('../../middlewares/auth/authToken')
 
 
 module.exports = function(app)
@@ -11,10 +12,10 @@ module.exports = function(app)
         try 
         {
                         
-            router.get('/users/:id/messages', verifyToken, UserMessages.getMessagesPreviews  )
-            router.get('/users/:id/messages/:messageId', verifyToken, UserMessages.getMessage )
-            router.patch('/users/:id/messages', verifyToken, UserMessages.send ) 
-            router.delete('/users/:id/messages/:usersMessageId/message/:messageId', verifyToken, UserMessages.deleteMessage )
+            router.get('/users/:id/messages', authenticateToken, UserMessages.getMessagesPreviews  )
+            router.get('/users/:id/messages/:messageId', authenticateToken, UserMessages.getMessage )
+            router.patch('/users/:senderId/messages', authenticateToken, UserMessages.send ) 
+            router.delete('/users/:id/messages/:usersMessageId/message/:messageId', authenticateToken, UserMessages.deleteMessage )
 
             app.use('/api/v1', router )
             

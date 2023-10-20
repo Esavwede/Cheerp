@@ -1,7 +1,6 @@
 const logger = require('../../system/logger/index')
 const User = require('../../model/User.model') 
 const UserMessages = require('../../model/UsersMessages.model') 
-const mongoose = require('mongoose') 
 
 
 
@@ -18,12 +17,13 @@ function send( messageId, messageBody, lastMessagePreview )
             var userOneId = messageBody.senderId 
             var userTwoId = messageBody.receiverId 
 
-            const session = await mongoose.startSession();
-            session.startTransaction();
-
+          
+            console.log('CHECK CHECK CHECK')
             console.log( messageId ) 
+            console.log( userTwoId ) 
 
             const filter = { messageId }
+            delete messageBody.messageId 
             const update = { $push: { messages: messageBody }, 
                              $set: { messageId: messageId,  lastMessagePreview: lastMessagePreview, userOneId, userTwoId } }
 
@@ -43,8 +43,6 @@ function send( messageId, messageBody, lastMessagePreview )
                     (async()=>{ 
                         logger.info(' message details found and updated ')
                         
-                        await session.commitTransaction() 
-                        session.endSession()
                         logger.info(' message sent ') 
                         resolve() 
                     })()
@@ -63,7 +61,6 @@ function send( messageId, messageBody, lastMessagePreview )
 
                     User.updateMany( filter, update, options ).then( result =>{
                         console.log( result ) 
-                            session.endSession()
                            logger.info(' message sent ')
                             resolve() 
                     })
@@ -137,7 +134,7 @@ function deleteMessage( userId, usersMessageId, messageId )
             }
 
            
-            const deleteQuery = { $pull: { messages: { messageId: messageId } } }
+            const deleteQuery = { $pull: { messages: { _id: messageId } } }
             const result = await UserMessages.updateOne(filter, deleteQuery )
 
             console.log( result ) 
